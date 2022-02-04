@@ -69,7 +69,6 @@
             "sslKey": "./ssl/server.key",
             "ssl": true,
             "browserTarget": "test:build"
-
           },
           "configurations": {
             "production": {

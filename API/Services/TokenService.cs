@@ -14,8 +14,6 @@ namespace API.Services;
 
 public class TokenService : ITokenService
 {
-    private readonly IConfiguration _config;
-
     public readonly SymmetricSecurityKey _key;
 
     public TokenService(IConfiguration config)
