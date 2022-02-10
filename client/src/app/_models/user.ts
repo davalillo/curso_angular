@@ -1,7 +1,5 @@
 export interface User {
-    username:string;
-    token:string;
+    username: string;
+    token: string;
+    photoUrl: string;
 }
-
-let data : string | number ="42";
-data=10;

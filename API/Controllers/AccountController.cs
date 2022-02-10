@@ -17,9 +17,11 @@ public class AccountController : BaseApiController
 {
     private readonly DataContext _context;
     private readonly ITokenService _tokenService;
+    private readonly IUserRepository _userRepository;
 
-    public AccountController(DataContext context, ITokenService tokenService)
+    public AccountController(DataContext context, ITokenService tokenService, IUserRepository userRepository)
     {
+        _userRepository = userRepository;
         _context = context;
         _tokenService = tokenService;
     }
@@ -28,11 +30,11 @@ public class AccountController : BaseApiController
     public async Task<ActionResult<UserDto>> Register(RegisterDto registerDto)
     {
 
-        if(await UserExists(registerDto.Username))
+        if (await UserExists(registerDto.Username))
         {
-            return BadRequest("Username is taken")   ;
+            return BadRequest("Username is taken");
         }
-        
+
         using var hmac = new HMACSHA512();
 
         var user = new AppUser
@@ -46,8 +48,9 @@ public class AccountController : BaseApiController
 
         await _context.SaveChangesAsync();
 
-        return new UserDto{
-            Username=user.UserName,
+        return new UserDto
+        {
+            Username = user.UserName,
             Token = _tokenService.CreateToken(user)
         };
     }
@@ -55,22 +58,25 @@ public class AccountController : BaseApiController
     [HttpPost("login")]
     public async Task<ActionResult<UserDto>> Login(LoginDto loginDto)
     {
-        var user= await _context.Users.SingleOrDefaultAsync<AppUser>(user=>user.UserName==loginDto.Username);
+        var user= await _userRepository.GetUserByUsernameAsync(loginDto.Username);
+        //var user = await _context.Users.SingleOrDefaultAsync<AppUser>(user => user.UserName == loginDto.Username);
 
-        if(user==null) return Unauthorized("Invalid username");
+        if (user == null) return Unauthorized("Invalid username");
 
         using var hmac = new HMACSHA512(user.PasswordSalt);
 
         var computedHas = hmac.ComputeHash(Encoding.UTF8.GetBytes(loginDto.Password));
 
-        for (int i=0; i< computedHas.Length; i++)
+        for (int i = 0; i < computedHas.Length; i++)
         {
-            if(computedHas[i]!=user.PasswordHash[i]) return Unauthorized("Invalid password");
+            if (computedHas[i] != user.PasswordHash[i]) return Unauthorized("Invalid password");
         }
 
-         var dto= new UserDto{
-            Username=user.UserName,
-            Token = _tokenService.CreateToken(user)
+        var dto = new UserDto
+        {
+            Username = user.UserName,
+            Token = _tokenService.CreateToken(user),
+            PhotoUrl = user.Photos?.FirstOrDefault(p => p.IsMain)?.Url
         };
 
         return Ok(dto);
