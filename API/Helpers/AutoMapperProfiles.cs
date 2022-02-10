@@ -24,5 +24,7 @@ public class AutoMapperProfiles : Profile
         CreateMap<Photo, PhotoDto>().ReverseMap();
 
         CreateMap<MemberUpdateDto, AppUser>();
+
+        CreateMap<RegisterDto, AppUser>();
     }
 }
