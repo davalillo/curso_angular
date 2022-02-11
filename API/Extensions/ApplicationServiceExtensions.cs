@@ -23,7 +23,7 @@ public static class ApplicationServiceExtensions
     
         services.AddScoped<IPhotoService, PhotoService>();
     
-
+        services.AddScoped<LogUserActivity>(); 
         services.AddScoped<IUserRepository, UserRespository>();
 
         services.AddAutoMapper(typeof(AutoMapperProfiles).Assembly);
