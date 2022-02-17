@@ -1,8 +1,6 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-#nullable disable
-
 namespace API.Data.Migrations
 {
     public partial class ExtendedUserEntity : Migration
@@ -11,6 +9,12 @@ namespace API.Data.Migrations
         {
             migrationBuilder.AddColumn<string>(
                 name: "City",
+                table: "Users",
+                type: "TEXT",
+                nullable: true);
+
+            migrationBuilder.AddColumn<string>(
+                name: "Country",
                 table: "Users",
                 type: "TEXT",
                 nullable: true);
@@ -101,6 +105,10 @@ namespace API.Data.Migrations
 
             migrationBuilder.DropColumn(
                 name: "City",
+                table: "Users");
+
+            migrationBuilder.DropColumn(
+                name: "Country",
                 table: "Users");
 
             migrationBuilder.DropColumn(

@@ -1,52 +1,49 @@
 using System.Collections.Generic;
-using System.Security.Cryptography;
 using System.Text.Json;
 using System.Threading.Tasks;
 using API.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
-namespace API.Data;
-
-public class Seed
+namespace API.Data
 {
-    public static async Task SeedUsers(UserManager<AppUser> userManager, RoleManager<AppRole> roleManager)
+    public class Seed
     {
-        if (await userManager.Users.AnyAsync()) return;
-
-        var userData = await System.IO.File.ReadAllTextAsync("Data/UserSeedData.json");
-        var users = JsonSerializer.Deserialize<List<AppUser>>(userData);
-
-        if (users == null) return;
-
-        var roles=new List<AppRole>
+        public static async Task SeedUsers(UserManager<AppUser> userManager, 
+            RoleManager<AppRole> roleManager)
         {
-            new AppRole {Name="Member"},
-            new AppRole {Name="Admin"},
-            new AppRole {Name="Moderator"}
-        };
+            if (await userManager.Users.AnyAsync()) return;
 
-        foreach(var role in roles)
-        {
-            await roleManager.CreateAsync(role);
+            var userData = await System.IO.File.ReadAllTextAsync("Data/UserSeedData.json");
+            var users = JsonSerializer.Deserialize<List<AppUser>>(userData);
+            if (users == null) return;
+
+            var roles = new List<AppRole>
+            {
+                new AppRole{Name = "Member"},
+                new AppRole{Name = "Admin"},
+                new AppRole{Name = "Moderator"},
+            };
+
+            foreach (var role in roles)
+            {
+                await roleManager.CreateAsync(role);
+            }
+            
+            foreach (var user in users)
+            {
+                user.UserName = user.UserName.ToLower();
+                await userManager.CreateAsync(user, "Pa$$w0rd");
+                await userManager.AddToRoleAsync(user, "Member");
+            }
+
+            var admin = new AppUser
+            {
+                UserName = "admin"
+            };
+
+            await userManager.CreateAsync(admin, "Pa$$w0rd");
+            await userManager.AddToRolesAsync(admin, new[] {"Admin", "Moderator"});
         }
-
-        foreach (var user in users)
-        {
-            user.UserName = user.UserName.ToLower();
-
-            await userManager.CreateAsync(user, "Pass123");
-
-            await userManager.AddToRoleAsync(user, "Member");
-        }
-
-        var admin=new AppUser
-        {
-            UserName="admin"
-        };
-
-        await userManager.CreateAsync(admin, "Pass123");
-
-        await userManager.AddToRolesAsync(admin, new []{"Moderator", "Admin"});
     }
 }
