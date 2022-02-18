@@ -1,5 +1,5 @@
 using System;
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace API.DTOs
 {
@@ -18,6 +18,7 @@ namespace API.DTOs
 
         [JsonIgnore]
         public bool SenderDeleted { get; set; }
+
         [JsonIgnore]
         public bool RecipientDeleted { get; set; }
     }

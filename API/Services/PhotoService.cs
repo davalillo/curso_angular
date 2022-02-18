@@ -4,16 +4,14 @@ using API.Interfaces;
 using CloudinaryDotNet;
 using CloudinaryDotNet.Actions;
 using Microsoft.AspNetCore.Http;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-
 
 namespace API.Services
 {
     public class PhotoService : IPhotoService
     {
         private readonly Cloudinary _cloudinary;
-        public PhotoService(IOptions<CloudinarySettings> config, ILogger<PhotoService> logger)
+        public PhotoService(IOptions<CloudinarySettings> config)
         {
             var acc = new Account
             (
@@ -21,8 +19,6 @@ namespace API.Services
                 config.Value.ApiKey,
                 config.Value.ApiSecret
             );
-
-            logger.LogWarning(System.Text.Json.JsonSerializer.Serialize(config));
 
             _cloudinary = new Cloudinary(acc);
         }

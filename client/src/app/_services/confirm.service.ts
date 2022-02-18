@@ -9,7 +9,6 @@ import { ConfirmDialogComponent } from '../modals/confirm-dialog/confirm-dialog.
 export class ConfirmService {
   bsModelRef: BsModalRef;
 
-
   constructor(private modalService: BsModalService) { }
 
   confirm(title = 'Confirmation', 
@@ -28,7 +27,7 @@ export class ConfirmService {
     
     return new Observable<boolean>(this.getResult());
   }
-  
+
   private getResult() {
     return (observer) => {
       const subscription = this.bsModelRef.onHidden.subscribe(() => {
@@ -43,6 +42,4 @@ export class ConfirmService {
       }
     }
   }
-
 }
-
