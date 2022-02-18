@@ -34,7 +34,10 @@ namespace API
 
             services.AddSignalR();
 
-            services.AddLogging();
+            services.AddLogging(configure=>
+            {
+                
+            });
 
 
             services.AddSwaggerGen(c =>

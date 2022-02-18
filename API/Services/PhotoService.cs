@@ -13,7 +13,7 @@ namespace API.Services
     public class PhotoService : IPhotoService
     {
         private readonly Cloudinary _cloudinary;
-        public PhotoService(IOptions<CloudinarySettings> config, ILogger logger)
+        public PhotoService(IOptions<CloudinarySettings> config, ILogger<PhotoService> logger)
         {
             var acc = new Account
             (
