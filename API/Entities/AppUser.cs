@@ -6,10 +6,15 @@ namespace API.Entities
 {
     public class AppUser : IdentityUser<int>
     {
-        public DateTime DateOfBirth { get; set; }
+        private DateTime _dateOfBirth;
+        public DateTime DateOfBirth
+        {
+            get => _dateOfBirth;
+            set => _dateOfBirth = value.ToUniversalTime();
+        }
         public string KnownAs { get; set; }
-        public DateTime Created { get; set; } = DateTime.Now;
-        public DateTime LastActive { get; set; } = DateTime.Now;
+        public DateTime Created { get; set; } = DateTime.UtcNow;
+        public DateTime LastActive { get; set; } = DateTime.UtcNow;
         public string Gender { get; set; }
         public string Introduction { get; set; }
         public string LookingFor { get; set; }
