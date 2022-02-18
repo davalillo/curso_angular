@@ -20,6 +20,19 @@ namespace API.Services
                 config.Value.ApiSecret
             );
 
+            if(acc.Cloud==null)
+            {
+                acc.Cloud=Environment.GetEnvironmentVariable("CloudynarySettings_CloudName");
+            }
+            if(acc.ApiKey==null)
+            {
+                acc.Cloud=Environment.GetEnvironmentVariable("CloudinarySettings_ApiKey");
+            }
+            if(acc.ApiSecret==null)
+            {
+                acc.Cloud=Environment.GetEnvironmentVariable("CloudinarySettings_ApiSecret");
+            }
+
             _cloudinary = new Cloudinary(acc);
         }
 
